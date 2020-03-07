@@ -51,7 +51,7 @@ exports.startServer = async function () {
     */
     logger.info('Adding Middleware Functions...')
     app.use(morgan('combined'))
-    app.use(cors(corsOptions))
+    //app.use(cors(corsOptions))
 
     /*
     Adding resources to Response object
@@ -66,6 +66,10 @@ exports.startServer = async function () {
     })
 
     app.use(require('./routes/apiRouter'))
+
+    app.get('/echo', (req, res) => {
+      res.send(req.query.message || 'No Message supplied!')
+    })
 
     app.use((req, res) => {
       res.status(404).send(JSON.stringify({ error: true, success: false, msg: 'Could not find the requested resource!' }))
