@@ -2,7 +2,6 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 var winston = require('winston')
-const NodeCache = require('node-cache')
 var http = require('http')
 
 
@@ -15,8 +14,6 @@ var exports = module.exports = {}
 exports.startServer = async function () {
   logger.debug('Server running on pid: ' + process.pid)
   try {
-    const token = process.env.TOKEN
-
     /*
     Configuring cors
     */
@@ -37,21 +34,11 @@ exports.startServer = async function () {
     const app = express()
 
     /*
-    Configuring Cache module
-     */
-    const cache = new NodeCache({
-      // 60 seconds seems like a reasonable start. Updates are slow anyways
-      stdTTL: 60,
-      // Should be at least twice the rate of the ttl -> Nyquist rate
-      checkperiod: 29
-    })
-
-    /*
     Declaring middleware functions used by ALL Routes
     */
     logger.info('Adding Middleware Functions...')
     app.use(morgan('combined'))
-    //app.use(cors(corsOptions))
+    app.use(cors())
 
     /*
     Adding resources to Response object
@@ -60,15 +47,13 @@ exports.startServer = async function () {
       res.locals.sendError = require('./utils/sendError')
       res.locals.sendSuccess = require('./utils/sendSuccess')
       res.locals.logger = logger
-      res.locals.token = token
-      res.locals.cache = cache
       next()
     })
 
     app.use(require('./routes/apiRouter'))
 
     app.get('/echo', (req, res) => {
-      res.send(req.query.message || 'No Message supplied!')
+      res.send('Sending message!')
     })
 
     app.use((req, res) => {
@@ -77,7 +62,7 @@ exports.startServer = async function () {
 
     logger.info('Starting Listener on Port: ' + config.general.port)
     var httpServer = http.createServer(app)
-    httpServer.listen(config.general.port, 'localhost')
+    httpServer.listen(config.general.port, '0.0.0.0')
 
     /*
      Setting up websocket server

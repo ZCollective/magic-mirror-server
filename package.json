@@ -23,6 +23,7 @@
     "morgan": "^1.9.1",
     "node-cache": "^5.1.0",
     "nodemon": "^2.0.2",
+    "qrcode": "^1.4.4",
     "tar-fs": "^2.0.0",
     "utf-8-validate": "^5.0.2",
     "winston": "^3.2.1",

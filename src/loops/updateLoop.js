@@ -7,6 +7,7 @@ const path = require('path')
 const gunzip = require('gunzip-maybe')
 const tar = require('tar-fs')
 const stream = require('stream')
+const sendMessage = require('../utils/sendMessage')
 module.exports = run
 /**
  * @param {winston.Logger} logger
@@ -42,7 +43,7 @@ async function run (logger, ws) {
           responseStream.pipe(gunzip(3)).pipe(tar.extract(config.directories.zipDir))
 
           // TODO do the installation of the app.
-          ws.send('NEW_VERSION')
+          sendMessage(ws, 'updateAvailable')
         } else {
           logger.warning('Type of response does not match expected values! Type is ' + (typeof response))
         }
@@ -59,4 +60,8 @@ async function run (logger, ws) {
       logger.error('Trace: ' + error.stack)
     }
   }, config.general.updateLoopInterval)
+  ws.on('close', () => {
+    logger.info('Stopping update loop!')
+    clearInterval(intervalHandle)
+  })
 }

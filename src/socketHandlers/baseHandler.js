@@ -1,6 +1,6 @@
 const WebSocket = require('ws')
 const events = require('events')
-
+const globalBus = require('../utils/globalEventBus')
 /*
 Setup Websocket Eventbus for Responses
  */
@@ -19,11 +19,24 @@ exports.setupServer = function (server, logger) {
    */
   EventBus.on('echo', require('./echoHandler'))
   EventBus.on('ready', require('./guiReadyHandler'))
+  EventBus.on('sysReconfigure', require('./sysConfigHandler'))
+  EventBus.on('contentReconfigure', require('./contentConfigHandler'))
+  EventBus.on('startWifi', require('./wifiHandler'))
 
   /*
    Define on Connection listener
    */
   wss.on('connection', (ws) => {
+
+    //event translation from nonws to ws
+    globalBus.on('sysReconfigure', () => {
+      EventBus.emit('sysReconfigure', logger, ws)
+    })
+
+    globalBus.on('contentReconfigure', (config) => {
+      EventBus.emit('contentReconfigure', logger, ws, config)
+    })
+    
     logger.debug('Connection with Socket was made!')
 
     /*

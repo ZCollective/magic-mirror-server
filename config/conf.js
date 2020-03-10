@@ -47,18 +47,22 @@ var config = {
     },
     general: {
       port: 11882,
-      updateLoopInterval: 10 * 1000
+      updateLoopInterval: /*10 * 1000*/ 1 * 60 * 60 * 1000
     },
     directories: {
       htmlDir: path.join(process.cwd(),'html'),
       zipDir: path.join(process.cwd(), 'zip'),
       firstDeployDir: path.join(process.cwd(), 'deploy1'),
-      secondDeployDir: path.join(process.cwd(), 'deploy2')
+      secondDeployDir: path.join(process.cwd(), 'deploy2'),
+      configDir: path.join(process.cwd(), 'config')
     },
     files: {
       versionInfo: 'versionInfo.json',
       zipFile: 'app.tar.gz',
       backendBinary: 'mirror-backend',
+      systemConfig: 'sysconfig.json',
+      contentConfig: 'contentconfig.json',
+      usageInfo: 'usageInfo.json'
     }
   }
 }
