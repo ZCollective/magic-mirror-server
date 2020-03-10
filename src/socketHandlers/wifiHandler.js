@@ -11,7 +11,7 @@ module.exports = handle
 async function handle(logger, ws, data) {
 
   //generate wpa password & start access point.
-  let password = crypto.randomBytes().toString('hex')    
+  let password = crypto.randomBytes(8).toString('hex')    
   logger.debug('Generated password: ' + password)
   
   //start access point

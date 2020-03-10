@@ -91,6 +91,7 @@ exports.setupServer = function (server, logger) {
       } else if (message.data === null || message.data === undefined) {
         ws.close(1003, 'No Data!')
       } else {
+        logger.debug('Event: ' + message.event)
         EventBus.emit(message.event, logger, ws, message.data)
       }
     })
