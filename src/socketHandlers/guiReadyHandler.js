@@ -34,8 +34,9 @@ function checkFirstStartup (logger, ws)  {
   let usageFile = fs.readJSONSync(usageFilePath)
   if (usageFile.firstUsage) {
     sendMessage(ws, 'firstStart')
+  } else {
+    sendMessage(ws, 'showContent')
   }
-  //sendMessage(ws,'firstStart', {password: '12345678'})
 }
 
 function simulateConfigEvent (logger, ws) {

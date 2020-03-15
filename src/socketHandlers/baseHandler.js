@@ -19,9 +19,9 @@ exports.setupServer = function (server, logger) {
    */
   EventBus.on('echo', require('./echoHandler'))
   EventBus.on('ready', require('./guiReadyHandler'))
-  EventBus.on('sysReconfigure', require('./sysConfigHandler'))
-  EventBus.on('contentReconfigure', require('./contentConfigHandler'))
-  EventBus.on('startWifi', require('./wifiHandler'))
+  EventBus.on('startAP', require('./wifiHandler').handleStartAP)
+  EventBus.on('listWifi', require('./wifiHandler').handleListWifi)
+  EventBus.on('connectWifi', require('./wifiHandler').handleConnectWifi)
 
   /*
    Define on Connection listener
@@ -88,11 +88,12 @@ exports.setupServer = function (server, logger) {
         ws.close(1003, 'No Message!')
       } else if (message.event === null || message.event === undefined) {
         ws.close(1003, 'No Event!')
-      } else if (message.data === null || message.data === undefined) {
-        ws.close(1003, 'No Data!')
       } else {
+        if (message.data === null || message.data === undefined) {
+          logger.debug('No Data for event: ' + message.event)
+        }
         logger.debug('Event: ' + message.event)
-        EventBus.emit(message.event, logger, ws, message.data)
+        EventBus.emit(message.event, logger, ws, message.data || '')
       }
     })
   })
