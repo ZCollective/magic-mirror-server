@@ -1,9 +1,6 @@
-[submodule "create_ap"]
+[submodule "lib/create_ap"]
 	path = lib/create_ap
 	url = https://github.com/oblique/create_ap.git
-[submodule "mirror_shared_code"]
-	path = mirror_shared_code
-	url = git@gitlab.spackenserver.de:z-collection/mirror_shared_code.git
 [submodule "lib/mirror_shared_code"]
 	path = lib/mirror_shared_code
 	url = git@gitlab.spackenserver.de:z-collection/mirror_shared_code.git
