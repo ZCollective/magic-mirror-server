@@ -1,3 +1,5 @@
+const sendMessage = require('../utils/sendMessage')
+const events = require('../../lib/mirror_shared_code/socketEvents').backendEvents
 
 module.exports = handle
 /**
@@ -7,5 +9,5 @@ module.exports = handle
  */
 async function handle (logger, ws, data) {
   logger.info('Received: ' + data)
-  ws.send(data)
+  sendMessage(ws, events.echo, data)
 }

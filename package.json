@@ -1,5 +1,5 @@
 {
-  "name": "update-server",
+  "name": "mirror-backend",
   "version": "0.0.1",
   "description": "Update Server for the magic mirror hardware",
   "main": "src/master.js",
@@ -7,23 +7,23 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/master.js",
     "lint": "standard --fix ./",
-    "package": "pkg --targets node10-linux-x64 --out-path ./build/ ."
+    "package": "pkg --targets node10.15.3-linux-armv7 --out-path ./build/ ."
+  },
+  "bin": "src/master.js",
+  "pkg": {
+    "scripts": [
+      "config/**/*.js"
+    ]
   },
   "author": "ZCollective",
   "license": "ISC",
   "dependencies": {
     "bent": "^7.1.0",
-    "bufferutil": "^4.0.1",
-    "busboy": "^0.3.1",
-    "compare-versions": "^3.6.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "fs-extra": "^8.1.0",
     "gunzip-maybe": "^1.4.1",
     "morgan": "^1.9.1",
-    "node-cache": "^5.1.0",
-    "nodemon": "^2.0.2",
-    "qrcode": "^1.4.4",
     "tar-fs": "^2.0.0",
     "utf-8-validate": "^5.0.2",
     "winston": "^3.2.1",
@@ -31,6 +31,8 @@
     "ws": "^7.2.1"
   },
   "devDependencies": {
-    "pkg": "^4.4.3"
+    "nodemon": "^2.0.2",
+    "pkg": "^4.4.3",
+    "standard": "^14.3.3"
   }
 }
