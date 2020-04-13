@@ -1,7 +1,6 @@
 const WebSocket = require('ws')
 const events = require('events')
-const globalBus = require('../utils/globalEventBus')
-const eventsToListen = require('../../lib/mirror_shared_code/socketEvents').frontendEvents
+const eventLib = require('../../lib/mirror_shared_code/socketEvents')
 /*
 Setup Websocket Eventbus for Responses
  */
@@ -17,15 +16,21 @@ exports.setupServer = function (server, logger) {
   /*
    Setup individual handlers
    */
-  EventBus.on(eventsToListen.echo, require('./echoHandler'))
-  EventBus.on(eventsToListen.ready, require('./guiReadyHandler'))
-  EventBus.on(eventsToListen.start_ap, require('./wifiHandler').handleStartAP)
-  EventBus.on(eventsToListen.list_wifi, require('./wifiHandler').handleListWifi)
-  EventBus.on(eventsToListen.connect_wifi, require('./wifiHandler').handleConnectWifi)
-  EventBus.on(eventsToListen.config_ready, require('./configHandler').handleConfigReady)
-  EventBus.on(eventsToListen.confirm_wifi_settings, require('./configHandler').handleConfirmWifiConfig)
-  EventBus.on(eventsToListen.get_device_info, require('./debugHandler').handleGetDeviceInfo)
-  EventBus.on(eventsToListen.set_device_name, require('./configHandler').handleSetDeviceName)
+
+   //Events from Mirror Frontend
+  EventBus.on(eventLib.mirror_frontend.signal_frontend_ready.event, require('./guiReadyHandler'))
+  EventBus.on(eventLib.mirror_frontend.signal_start_ap.event, require('./wifiHandler').handleStartAP)
+  EventBus.on(eventLib.mirror_frontend.signal_get_device_info.event, require('./debugHandler').handleGetDeviceInfo)
+ 
+   //Events from Config Frontend
+  EventBus.on(eventLib.config_frontend.signal_config_ready.event, require('./configHandler').handleConfigReady)
+  EventBus.on(eventLib.config_frontend.signal_list_wifi.event, require('./wifiHandler').handleListWifi)
+  EventBus.on(eventLib.config_frontend.signal_connect_wifi.event, require('./wifiHandler').handleConnectWifi)
+  EventBus.on(eventLib.config_frontend.signal_confirm_wifi_settings.event, require('./configHandler').handleConfirmWifiConfig)
+  EventBus.on(eventLib.config_frontend.signal_set_device_name.event, require('./configHandler').handleSetDeviceName)
+  //EventBus.on(eventLib.config_frontend.signal_get_device_name)
+  EventBus.on(eventLib.config_frontend.signal_is_update_available.event, require('./updateHandler').handleisUpdateAvailable)
+  EventBus.on(eventLib.config_frontend.signal_update_now.event, require('./updateHandler').handleUpdateNow)
 
   /*
    Define on Connection listener

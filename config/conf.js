@@ -1,4 +1,5 @@
-var winston = require('winston')
+const winston = require('winston')
+const format = winston.format
 const path = require('path')
 require('winston-daily-rotate-file')
 
@@ -6,7 +7,7 @@ var transport = new (winston.transports.DailyRotateFile)({
   frequency: '24h',
   filename: 'mirror-update-server-%DATE%.log',
   dirname: 'logs',
-  datePattern: 'YYY-MM-DD-HH'
+  datePattern: 'YYY-MM-DD-HH',
 })
 
 transport.on('rotate', () => {
@@ -19,31 +20,34 @@ var config = {
     },
     winston: {
       level: 'silly',
-      format: winston.format.json(),
+      format: format.combine(
+        format.timestamp(), format.json()
+      ),
       transports: [
         transport
       ]
     },
     general: {
       port: 11882,
-      updateLoopInterval: /*1 day -> 1 * 24 * 60 * 60 * 1000 */ 1 * 24 * 60 * 60 * 1000
+      updateLoopInterval: /*1hour -> 60 * 60 * 1000 */ 60 * 60 * 1000,
+      domain: 'spackenserver.de'
     },
     directories: {
-      htmlDir: path.join(process.cwd(),'html'),
-      zipDir: path.join(process.cwd(), 'zip'),
-      firstDeployDir: path.join(process.cwd(), 'deploy1'),
-      secondDeployDir: path.join(process.cwd(), 'deploy2'),
       configDir: path.join(process.cwd(), 'config'),
-      avahiDir: '/etc/avahi/services'
+      avahiDir: '/etc/avahi/services',
+      mirrorSoftwareDir: '/mirror-sw'
     },
     files: {
-      versionInfo: 'versionInfo.json',
       zipFile: 'app.tar.gz',
-      backendBinary: 'mirror-backend',
       systemConfig: 'sysconfig.json',
       contentConfig: 'contentconfig.json',
       usageInfo: 'usageInfo.json',
-      avahiService: 'mirror.service'
+      avahiService: 'mirror.service',
+      linkFile: '/active-sw',
+      screenonFile: '/screen-ctl/screenon',
+      screenoffFile: '/screen-ctl/screenoff',
+      screenCtlScript: '/screen-ctl/screen-ctl.py',
+      backendBinary: '/backend/mirror-backend'
     }
   },
   default: {
@@ -52,31 +56,34 @@ var config = {
     },
     winston: {
       level: 'silly',
-      format: winston.format.json(),
+      format: format.combine(
+        format.timestamp(), format.json()
+      ),
       transports: [
         new winston.transports.Console()
       ]
     },
     general: {
       port: 11882,
-      updateLoopInterval: /*10 * 1000*/ 1 * 60 * 60 * 1000
+      updateLoopInterval: 10 * 1000 /*1 * 60 * 60 * 1000*/,
+      domain: 'localhost'
     },
     directories: {
-      htmlDir: path.join(process.cwd(),'html'),
-      zipDir: path.join(process.cwd(), 'zip'),
-      firstDeployDir: path.join(process.cwd(), 'deploy1'),
-      secondDeployDir: path.join(process.cwd(), 'deploy2'),
       configDir: path.join(process.cwd(), 'config'),
-      avahiDir: '/etc/avahi/services'
+      avahiDir: '/etc/avahi/services',
+      mirrorSoftwareDir: '/mirror-test-sw'
     },
     files: {
-      versionInfo: 'versionInfo.json',
       zipFile: 'app.tar.gz',
-      backendBinary: 'mirror-backend',
       systemConfig: 'sysconfig.json',
       contentConfig: 'contentconfig.json',
       usageInfo: 'usageInfo.json',
-      avahiService: 'mirror.service'
+      avahiService: 'mirror.service',
+      linkFile: '/update-test-sw',
+      screenonFile: '/screen-ctl/screenon',
+      screenoffFile: '/screen-ctl/screenoff',
+      screenCtlScript: '/screen-ctl/screen-ctl.py',
+      backendBinary: '/backend/mirror-backend'
     }
   }
 }
