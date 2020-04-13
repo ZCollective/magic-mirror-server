@@ -1,14 +1,12 @@
 const sendMessage = require('../utils/sendMessage')
 const config = require('../../config/conf').get(process.env.NODE_ENV)
-const events = require('../../lib/mirror_shared_code/socketEvents').backendEvents
+const eventLib = require('../../lib/mirror_shared_code/socketEvents').mirror_frontend
 const path = require('path')
 const fs = require('fs-extra')
 const crypto = require('crypto')
 const childprocess = require('child_process')
 const globalBus = require('../utils/globalEventBus')
 const utils = require('../utils/utils')
-module.exports = handle
-
 
 /**
  * Handler to be called when the Frontend sends the GUI Ready signal!
@@ -17,6 +15,9 @@ module.exports = handle
  * @param {Object} data
  */
 async function handle (logger, ws, data) {
+
+  const signal = eventLib.signal_frontend_ready
+
   logger.info('Received Ready Signal!')
 
   /*
@@ -26,7 +27,7 @@ async function handle (logger, ws, data) {
 
   // If no internet connectivity is available, we must do the wifi config.
   let connectivity = await utils.checkInetAccess(logger)
-  sendMessage(ws, connectivity ? events.show_content : events.first_start)
+  sendMessage(ws, connectivity ? signal.responses.show_content : signal.responses.first_start)
 
   // we need some sort of message passing from config-frontend to mirror-frontend
   // this bus does the job.
@@ -36,3 +37,4 @@ async function handle (logger, ws, data) {
   })
 
 }
+module.exports = handle

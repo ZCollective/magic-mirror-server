@@ -1,5 +1,5 @@
 const sendMessage = require('../utils/sendMessage')
-const events = require('../../lib/mirror_shared_code/socketEvents').backendEvents
+const eventLib = require('../../lib/mirror_shared_code/socketEvents')
 const config = require('../../config/conf').get(process.env.NODE_ENV)
 const utils = require('../utils/utils')
 const path = require('path')
@@ -18,6 +18,8 @@ const childprocess = require('child_process')
  */
 async function handleConfigReady(logger, ws, data) {
 
+  const signal = eventLib.config_frontend.signal_config_ready
+
   /*
   To determine if we need to do the WIFI configuration we check if we have internet connectivity.
   Pinging 8.8.8.8 is a good start to reliably determine internet access
@@ -25,7 +27,7 @@ async function handleConfigReady(logger, ws, data) {
   If we do not have internet we send the wificonfig event
    */
   let connectivity = await utils.checkInetAccess(logger)
-  sendMessage(ws, connectivity ? events.normal_config : events.wifi_config)
+  sendMessage(ws, connectivity ? signal.responses.normal_config : signal.responses.wifi_config)
 }
 
 
@@ -42,18 +44,8 @@ async function handleConfigReady(logger, ws, data) {
 async function handleConfirmWifiConfig(logger, ws, data) {
 
   //After wifi settings are confirmed, we must restart to let them take effect.
-  globalBus.emit('frontendMessage', {
-    event: events.reboot
-  })
-
   utils.stopAP()
-
-  // For testing purposes we dont actually restart if the NOREBOOT env variable is set to true
-  if (process.env.NOREBOOT !== 'true') {
-    childprocess.exec(`sleep 10s;shutdown -r now`)
-  } else {
-    logger.debug('Simulating shutdown of system!')
-  }
+  utils.reboot(logger)
 }
 
 /**
@@ -68,10 +60,12 @@ async function handleConfirmWifiConfig(logger, ws, data) {
  */
 async function handleSetDeviceName(logger, ws, data) {
 
+  const signal = eventLib.config_frontend.signal_set_device_name
+
   // Use utils to get the hostname. Might fail, so we add a catch
   let hostname
   try {
-    hostname = utils.getHostName()
+    hostname = utils.getHostName(logger)
   } catch (error) {
     logger.error('Error reading hostname: ' + error)    
     sendMessage(ws, events.confirm_device_name, false)
@@ -102,7 +96,7 @@ async function handleSetDeviceName(logger, ws, data) {
       childprocess.execSync(`chown avahi:avahi ${avahiServicePath}`)
     } catch (error) {
       logger.error('Could not write avahi conf! ' + error)
-      sendMessage(ws, events.confirm_device_name, false)
+      sendMessage(ws, signal.responses.confirm_device_name, false)
       return
     }
   }
@@ -121,5 +115,5 @@ async function handleContentConfig(logger, ws, data) {
 module.exports = {
   handleConfigReady,
   handleConfirmWifiConfig,
-  handleSetDeviceName
+  handleSetDeviceName,
 }

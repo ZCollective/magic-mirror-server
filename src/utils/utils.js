@@ -1,4 +1,7 @@
 const childprocess = require('child_process')
+const eventbus = require('./globalEventBus')
+const eventLib = require('../../lib/mirror_shared_code/socketEvents')
+const fs = require('fs-extra')
 
 var availableNetworks = []
 /**
@@ -104,7 +107,7 @@ function stopAP () {
   childprocess.execSync(`create_ap --stop ${process.env.IFACE ? process.env.IFACE : 'wlan0'}`)
 }
 
-function getHostName () {
+function getHostName (logger) {
   try {
     return fs.readFileSync('/etc/hostname').toString()
   } catch (error) {
@@ -113,10 +116,24 @@ function getHostName () {
   }
 }
 
+function reboot(logger) {
+
+  eventbus.emit('frontendMessage', {
+    event: eventLib.mirror_frontend.signal_frontend_ready.responses.reboot
+  })
+
+  // For testing purposes we dont actually restart if the NOREBOOT env variable is set to true
+  if (process.env.NOREBOOT !== 'true') {
+    childprocess.exec(`sleep 10s;shutdown -r now`)
+  } else {
+    logger.debug('Simulating shutdown of system!')
+  }
+}
 module.exports = {
   checkInetAccess,
   getAvailableNetworks,
   scanAvailableNetworks,
   stopAP,
-  getHostName
+  getHostName,
+  reboot
 }

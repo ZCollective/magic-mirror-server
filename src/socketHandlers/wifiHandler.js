@@ -1,7 +1,7 @@
 const sendMessage = require('../utils/sendMessage')
 const crypto = require('crypto')
 const childprocess = require('child_process')
-const events = require('../../lib/mirror_shared_code/socketEvents').backendEvents
+const eventLib = require('../../lib/mirror_shared_code/socketEvents')
 const config = require('../../config/conf').get(process.env.NODE_ENV)
 const fs = require('fs-extra')
 const path = require('path')
@@ -19,6 +19,7 @@ const utils = require('../utils/utils')
  * @param {Object} [data]
  */
 async function handleStartAP(logger, ws, data) {
+  const signal = eventLib.mirror_frontend.signal_start_ap
 
   //generate wpa password & start access point.
   let password = crypto.randomBytes(8).toString('hex')    
@@ -39,7 +40,7 @@ async function handleStartAP(logger, ws, data) {
     let output = childprocess.execSync(command)
     logger.silly('Output of create_ap: ' + output)
   }
-  sendMessage(ws, events.ap_started, password)
+  sendMessage(ws, signal.responses.ap_started, password)
 }
 
 /**
@@ -50,12 +51,13 @@ async function handleStartAP(logger, ws, data) {
  * @param {data} [data] additional data transferred through the websocket
  */
 async function handleListWifi(logger, ws, data) {
+  const signal = eventLib.config_frontend.signal_list_wifi
   // Wifi networks are pre-scanned and just fetched here.
   logger.debug('Getting wifi networks')
   await utils.scanAvailableNetworks(logger)
   let ssidList = utils.getAvailableNetworks()
   logger.debug('Sending list: ' + ssidList)
-  sendMessage(ws, events.available_networks, ssidList)
+  sendMessage(ws, signal.responses.available_networks, ssidList)
 }
 
 /**
@@ -66,6 +68,7 @@ async function handleListWifi(logger, ws, data) {
  * @param {data} data additional data transferred through the websocket
  */
 async function handleConnectWifi(logger, ws, data) {
+  const signal = eventLib.config_frontend.signal_connect_wifi
 
   /*
     It is difficult to connect to a network via cli directly. Additonally the wifi 
@@ -117,7 +120,7 @@ async function handleConnectWifi(logger, ws, data) {
     })
     connectionStatus = true
   }
-  sendMessage(ws, events.new_connection_result, { ssid: data.ssid, status: connectionStatus})
+  sendMessage(ws, signal.responses.new_connection_result, { ssid: data.ssid, status: connectionStatus})
 }
 
 //Exporting the functions to make them available in the basehandler
