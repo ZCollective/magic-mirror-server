@@ -25,7 +25,6 @@ async function start () {
   if (cluster.isMaster) {
     logger.info('Master PID is: ' + process.pid)
     logger.info('Starting HTTP REST Server...')
-
     for (let i = 0; i < numCPUs; i++) {
       cluster.fork(process.env)
     }

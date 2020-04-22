@@ -83,7 +83,7 @@ var config = {
       screenonFile: '/screen-ctl/screenon',
       screenoffFile: '/screen-ctl/screenoff',
       screenCtlScript: '/screen-ctl/screen-ctl.py',
-      backendBinary: '/backend/mirror-backend'
+      backendBinary: '/backend/mirror-backend',
     }
   }
 }

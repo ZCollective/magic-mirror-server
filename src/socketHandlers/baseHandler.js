@@ -21,6 +21,7 @@ exports.setupServer = function (server, logger) {
   EventBus.on(eventLib.mirror_frontend.signal_frontend_ready.event, require('./guiReadyHandler'))
   EventBus.on(eventLib.mirror_frontend.signal_start_ap.event, require('./wifiHandler').handleStartAP)
   EventBus.on(eventLib.mirror_frontend.signal_get_device_info.event, require('./debugHandler').handleGetDeviceInfo)
+  EventBus.on(eventLib.mirror_frontend.signal_get_calendar_info.event, require('./calendarHandler').handleGetCalendarInfo)
  
    //Events from Config Frontend
   EventBus.on(eventLib.config_frontend.signal_config_ready.event, require('./configHandler').handleConfigReady)
@@ -31,6 +32,9 @@ exports.setupServer = function (server, logger) {
   //EventBus.on(eventLib.config_frontend.signal_get_device_name)
   EventBus.on(eventLib.config_frontend.signal_is_update_available.event, require('./updateHandler').handleisUpdateAvailable)
   EventBus.on(eventLib.config_frontend.signal_update_now.event, require('./updateHandler').handleUpdateNow)
+  EventBus.on(eventLib.config_frontend.signal_get_google_api_auth_url.event, require('./calendarHandler').handleGetOAuthLinkGoogle)
+  EventBus.on(eventLib.config_frontend.signal_supply_google_calendar_id.event, require('./calendarHandler').handleSupplyGoogleCalendarId)
+  EventBus.on(eventLib.config_frontend.signal_generate_google_api_token.event, require('./calendarHandler').handleGenerateTokenGoogle)
 
   /*
    Define on Connection listener
