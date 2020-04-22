@@ -25,8 +25,6 @@ async function handleStartAP(logger, ws, data) {
   let password = crypto.randomBytes(8).toString('hex')    
   logger.debug('Generated password: ' + password)
 
-  logger.debug('Stopping eventual earlier ap')
-  utils.stopAP()
 
   //The scan for networks is done, to allow access point usage. Some controllers do not allow scans while in AP mode.
   //logger.debug('Scanning for networks...')
@@ -34,6 +32,8 @@ async function handleStartAP(logger, ws, data) {
   
   //start access point if NOWIFI env variable is not set to true.
   if (process.env.NOWIFI !== "true") {
+    logger.debug('Stopping eventual earlier ap')
+    utils.stopAP()
     logger.debug('Starting access point')
     let command = `create_ap -n --redirect-to-localhost --country DE --no-dns --daemon -w 2 ${process.env.IFACE ? process.env.IFACE : 'wlan0'} Mirror ${password}`
     logger.debug('Command is: ' + command)
