@@ -35,7 +35,7 @@ router.get('/googleAuthURL', async (req, res) => {
 router.post('/googleCode', async (req, res) => {
   const logger = res.locals.logger
   try {
-    const code = req.body
+    const code = req.body.code
     if (oAuth2Client === null || oAuth2Client === undefined) {
       // Create OAuth2 Client
       const clientSecret = credentials.installed.client_secret
@@ -69,10 +69,10 @@ router.post('/googleCode', async (req, res) => {
   }
 })
 
-router.post('googleId', async (req, res) => {
+router.post('/googleId', async (req, res) => {
   const logger = res.locals.logger
   try {
-    const calendarid = req.body
+    const calendarid = req.body.id
     logger.debug('Data: ' + calendarid)
 
     // Storing Calendar Info
@@ -120,7 +120,8 @@ router.get('/info', async (req, res) => {
             fs.writeJSONSync(calendarFile, calendarInfo)
             res.locals.sendSuccess(res, {
               token: calendarInfo.token,
-              id: calendarInfo.calendarid
+              id: calendarInfo.calendarid,
+              type: 'google'
             })
           }
           break

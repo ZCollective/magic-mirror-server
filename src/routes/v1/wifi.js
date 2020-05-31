@@ -120,7 +120,7 @@ router.post('/confirmConfig', async (req, res) => {
 router.get('/connectivity', async (req, res) => {
   const logger = res.locals.logger
   try {
-    res.locals.sendSuccess(res, utils.checkInetAccess(logger))
+    res.locals.sendSuccess(res, await utils.checkInetAccess(logger))
   } catch (error) {
     res.locals.logger.error('Error in GET /connectivity: ' + error)
     res.locals.logger.error(error.stack)

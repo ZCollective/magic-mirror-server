@@ -15,16 +15,16 @@ var availableNetworks = []
 async function checkInetAccess(logger) {
   let connectivity = false
   try {
-    childprocess.execSync(`ping 8.8.8.8 -c 5`)
+    childprocess.execSync('ping 8.8.8.8 -c 5')
     connectivity = true
   } catch (error) {
-    //If ping does not have network connectivity it will return exit code: 1 (or 2 for other errors)
-    //non-zero exit codes are thrown as errors.
+    // If ping does not have network connectivity it will return exit code: 1 (or 2 for other errors)
+    // non-zero exit codes are thrown as errors.
     logger.error('No Connectivity! -> Ping command returned non zero code: ' + error)
   }
 
   logger.debug('Connectivity: ' + connectivity)
-  //we additionally check for first use, as with lan connectivity
+  // we additionally check for first use, as with lan connectivity
   if (process.env.WIFICONFIG === 'true' || !connectivity) {
     return false
   } else {
