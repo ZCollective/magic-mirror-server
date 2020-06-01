@@ -92,6 +92,7 @@ router.get('/info', async (req, res) => {
   try {
     if (!fs.existsSync(calendarFile)) {
       res.locals.sendSuccess(res, {})
+      return
     }
     const calendarInfo = fs.readJSONSync(calendarFile)
     if (calendarInfo.type === null || calendarInfo.type === undefined) {
