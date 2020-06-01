@@ -28,7 +28,7 @@ var config = {
       ]
     },
     general: {
-      port: 11882,
+      port: 80,
       updateLoopInterval: /*1hour -> 60 * 60 * 1000 */ 60 * 60 * 1000,
       domain: 'spackenserver.de'
     },
