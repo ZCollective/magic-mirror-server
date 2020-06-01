@@ -9,7 +9,7 @@
     "lint": "standard --fix ./",
     "package": "pkg --targets node10.15.3-linux-armv7 --out-path ./build/ ."
   },
-  "bin": "src/service.js",
+  "bin": "src/server.js",
   "pkg": {
     "scripts": [
       "config/**/*.js"
