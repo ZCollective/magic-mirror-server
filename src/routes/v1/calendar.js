@@ -90,6 +90,9 @@ router.post('/googleId', async (req, res) => {
 router.get('/info', async (req, res) => {
   const logger = res.locals.logger
   try {
+    if (!fs.existsSync(calendarFile)) {
+      res.locals.sendSuccess(res, {})
+    }
     const calendarInfo = fs.readJSONSync(calendarFile)
     if (calendarInfo.type === null || calendarInfo.type === undefined) {
       throw new Error('File does not have a CalendarType!')
