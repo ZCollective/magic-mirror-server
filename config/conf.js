@@ -73,7 +73,8 @@ var config = {
       configDir: path.join(process.cwd(), 'config'),
       avahiDir: '/etc/avahi/services',
       mirrorSoftwareDir: '/mirror-test-sw',
-      frontendDir: path.join(process.cwd(), 'src/static')
+      frontendDir: path.join(process.cwd(), 'src/static'),
+      settingsDir: '/settings'
     },
     files: {
       zipFile: 'app.tar.gz',

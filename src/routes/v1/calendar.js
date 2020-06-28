@@ -5,7 +5,8 @@ const { google } = require('googleapis')
 const SCOPES = ['https://www.googleapis.com/auth/calendar.events.readonly', 'https://www.googleapis.com/auth/calendar.readonly']
 const credentials = require('../../utils/client_secret')
 const path = require('path')
-const calendarFile = path.join(process.cwd(), 'calendar.json')
+const config = require('../../../config/conf').get(process.env.NODE_ENV)
+const calendarFile = path.join(config.directories.settingsDir, 'calendar.json')
 /**
  * @type {google.auth.OAuth2}
  */
@@ -55,7 +56,15 @@ router.post('/googleCode', async (req, res) => {
     const expiryDate = authTokens.expiry_date
 
     // Store tokens in file
-    const calendarObj = fs.readJsonSync(calendarFile)
+    let calendarObj
+    try {
+      calendarObj = fs.readJsonSync(calendarFile)
+    } catch (error) {
+      logger.error(error)
+      logger.error(error.stack)
+      logger.debug('Calendar config does not exist yet!')
+      calendarObj = {}
+    }
     calendarObj.type = 'google'
     calendarObj.token = access
     calendarObj.refreshtoken = refresh
