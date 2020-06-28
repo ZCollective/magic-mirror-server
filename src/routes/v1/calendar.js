@@ -69,6 +69,7 @@ router.post('/googleCode', async (req, res) => {
     calendarObj.token = access
     calendarObj.refreshtoken = refresh
     calendarObj.expiryDate = expiryDate
+    fs.ensureFileSync(calendarFile)
     fs.writeJSONSync(calendarFile, calendarObj)
     res.locals.sendSuccess(res, access)
   } catch (error) {
