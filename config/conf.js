@@ -36,7 +36,8 @@ var config = {
       configDir: path.join(process.cwd(), 'config'),
       avahiDir: '/etc/avahi/services',
       mirrorSoftwareDir: '/mirror-sw',
-      frontendDir: '/active-sw/frontend'
+      frontendDir: '/active-sw/frontend',
+      settingsDir: '/settings'
     },
     files: {
       zipFile: 'app.tar.gz',
@@ -86,7 +87,7 @@ var config = {
       screenonFile: '/screen-ctl/screenon',
       screenoffFile: '/screen-ctl/screenoff',
       screenCtlScript: '/screen-ctl/screen-ctl.py',
-      backendBinary: '/backend/mirror-backend',
+      backendBinary: '/backend/mirror-backend'
     }
   }
 }
