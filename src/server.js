@@ -23,6 +23,7 @@ try {
   logger.info('Adding Middleware Functions...')
   if (process.env.NODE_ENV === 'production') app.use(morgan('combined'))
   app.use(bodyParser.json())
+  app.use(cors({}))
 
   /*
   Adding resources to Response object
