@@ -5,6 +5,7 @@ router.use('/wifi', require('./wifi'))
 router.use('/calendar', require('./calendar'))
 router.use('/updates', require('./updates'))
 router.use('/device', require('./device'))
+router.use('/settings', require('./settings'))
 module.exports = router
 
 /*
