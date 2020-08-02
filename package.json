@@ -4,10 +4,12 @@
   "description": "Update Server for the magic mirror hardware",
   "main": "src/master.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/master.js",
     "lint": "standard --fix ./",
-    "package": "pkg --targets node10.15.3-linux-armv7 --out-path ./build/ ."
+    "package": "pkg --targets node10.15.3-linux-armv7 --out-path ./build/ .",
+    "test": "mocha --recursive ./tests/unitTests/**/*.js --colors -u bdd -t 9999",
+    "test:coverage": "nyc npm run test",
+    "test:report": "nyc --report npm run test"
   },
   "bin": "src/master.js",
   "pkg": {
@@ -32,7 +34,11 @@
     "ws": "^7.2.1"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.1.0",
+    "nock": "^13.0.3",
     "nodemon": "^2.0.2",
+    "nyc": "^15.1.0",
     "pkg": "^4.4.3",
     "standard": "^14.3.3"
   }
