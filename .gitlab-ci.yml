@@ -18,20 +18,23 @@ cache:
   paths:
     - .npm/
 
-before_script:
-  - npm ci --cache .npm --prefer-offline
 
 run_lint:
   stage: lint
+  before_script:
+    - npm ci --cache .npm --prefer-offline
   script:
     - npm run lint
 
 run_test:
   stage: test
   script:
+    - npm ci --cache .npm --prefer-offline
     - npm run test:coverage
 
 run_build:
   stage: build
+  before_script:
+    - npm ci --cache .npm --prefer-offline
   script:
     - npm run package
