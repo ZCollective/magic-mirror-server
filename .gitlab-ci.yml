@@ -1,13 +1,13 @@
 image: node:10.22.0
 
-include:
-  - template: Code-Quality.gitlab-ci.yml
+#include:
+#  - template: Code-Quality.gitlab-ci.yml
 
 stages: 
   - lint
   - test
-  - quality
-  - build
+#  - quality
+#  - build
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
@@ -32,9 +32,9 @@ run_test:
     - npm ci --cache .npm --prefer-offline
     - npm run test:coverage
 
-run_build:
-  stage: build
-  before_script:
-    - npm ci --cache .npm --prefer-offline
-  script:
-    - npm run package
+#run_build:
+#  stage: build
+#  before_script:
+#    - npm ci --cache .npm --prefer-offline
+#  script:
+#    - npm run package
