@@ -3,4 +3,4 @@
 	url = https://github.com/oblique/create_ap.git
 [submodule "lib/mirror_shared_code"]
 	path = lib/mirror_shared_code
-	url = ./mirror_shared_code.git
+	url = ../mirror_shared_code.git
