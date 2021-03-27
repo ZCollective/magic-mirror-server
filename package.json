@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/server.js",
     "lint": "standard --fix ./",
-    "package": "pkg --targets node10.15.3-linux-armv7 --out-path ./build/ ."
+    "package": "pkg --targets node10.15.3-linux-armv7 -d --out-path ./build/ ."
   },
   "bin": "src/server.js",
   "pkg": {

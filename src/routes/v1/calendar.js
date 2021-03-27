@@ -125,7 +125,8 @@ router.get('/info', async (req, res) => {
             })
             if (oAuth2Client.isTokenExpiring()) {
               logger.debug('Refreshing token')
-              const tokens = await oAuth2Client.refreshAccessToken()
+              const tokens = await oAuth2Client.getToken()
+              logger.debug('Tokens: ' + JSON.stringify(tokens, null, 2))
               calendarInfo.token = tokens.credentials.access_token || calendarInfo.token
               calendarInfo.refreshtoken = tokens.credentials.refresh_token || calendarInfo.refreshtoken
               calendarInfo.expiryDate = tokens.credentials.expiry_date || calendarInfo.expiryDate
