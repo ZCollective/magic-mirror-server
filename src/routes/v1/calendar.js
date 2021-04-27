@@ -124,13 +124,12 @@ router.get('/info', async (req, res) => {
               expiry_date: calendarInfo.expiryDate || 1
             })
             if (oAuth2Client.isTokenExpiring()) {
-              logger.debug('Refreshing token')
-              const tokens = await oAuth2Client.getToken()
-              logger.debug('Tokens: ' + JSON.stringify(tokens, null, 2))
-              calendarInfo.token = tokens.credentials.access_token || calendarInfo.token
-              calendarInfo.refreshtoken = tokens.credentials.refresh_token || calendarInfo.refreshtoken
-              calendarInfo.expiryDate = tokens.credentials.expiry_date || calendarInfo.expiryDate
-            }
+              logger.debug('Token is expiring -> Refreshing token')
+              const response = await oAuth2Client.getAccessToken()
+              logger.silly('Token: ' + JSON.stringify(response, null, 2))
+              calendarInfo.token = response.token || calendarInfo.token
+              calendarInfo.expiryDate = response.res.data.expiry_date || calendarInfo.expiryDate
+            } else logger.debug('Token is not expiring!')
             logger.debug('Token: ' + calendarInfo.token)
             fs.writeJSONSync(calendarFile, calendarInfo)
             res.locals.sendSuccess(res, {
