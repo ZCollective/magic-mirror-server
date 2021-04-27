@@ -7,7 +7,7 @@ var transport = new (winston.transports.DailyRotateFile)({
   frequency: '24h',
   filename: 'mirror-update-server-%DATE%.log',
   dirname: 'logs',
-  datePattern: 'YYY-MM-DD-HH',
+  datePattern: 'YYY-MM-DD-HH'
 })
 
 transport.on('rotate', () => {
@@ -28,14 +28,16 @@ var config = {
       ]
     },
     general: {
-      port: 11882,
+      port: 80,
       updateLoopInterval: /*1hour -> 60 * 60 * 1000 */ 60 * 60 * 1000,
       domain: 'spackenserver.de'
     },
     directories: {
       configDir: path.join(process.cwd(), 'config'),
       avahiDir: '/etc/avahi/services',
-      mirrorSoftwareDir: '/mirror-sw'
+      mirrorSoftwareDir: '/mirror-sw',
+      frontendDir: '/active-sw/frontend',
+      settingsDir: '/settings'
     },
     files: {
       zipFile: 'app.tar.gz',
@@ -71,7 +73,9 @@ var config = {
     directories: {
       configDir: path.join(process.cwd(), 'config'),
       avahiDir: '/etc/avahi/services',
-      mirrorSoftwareDir: '/mirror-test-sw'
+      mirrorSoftwareDir: '/mirror-test-sw',
+      frontendDir: path.join(process.cwd(), 'src/static'),
+      settingsDir: path.join(process.cwd())
     },
     files: {
       zipFile: 'app.tar.gz',
