@@ -117,7 +117,7 @@ router.get('/info', async (req, res) => {
             const clientSecret = credentials.installed.client_secret
             const clientID = credentials.installed.client_id
             const redirectURIs = credentials.installed.redirect_uris
-            const oAuth2Client = new google.auth.OAuth2(clientID, clientSecret, redirectURIs[0])
+            let oAuth2Client = new google.auth.OAuth2(clientID, clientSecret, redirectURIs[0])
             oAuth2Client.setCredentials({
               access_token: calendarInfo.token,
               refresh_token: calendarInfo.refreshtoken,
@@ -125,6 +125,11 @@ router.get('/info', async (req, res) => {
             })
             if (oAuth2Client.isTokenExpiring()) {
               logger.debug('Token is expiring -> Refreshing token')
+              oAuth2Client = new google.auth.OAuth2(clientID, clientSecret, redirectURIs[0])
+              oAuth2Client.setCredentials({
+                refresh_token: calendarInfo.refreshtoken,
+                expiry_date: calendarInfo.expiryDate || 1
+              })
               const response = await oAuth2Client.getAccessToken()
               logger.silly('Token: ' + JSON.stringify(response, null, 2))
               calendarInfo.token = response.token || calendarInfo.token
